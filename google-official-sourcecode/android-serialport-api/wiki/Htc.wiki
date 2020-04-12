@@ -1,0 +1,188 @@
+#summary Activating the serial port on HTC Dream, HTC Magic and HTC Hero
+
+<wiki:toc>
+
+= Introduction =
+HTC Android devices such as the Dream, Magic and Hero each have an ExtUSB (Extended USB) port. This port is used to charge the phone, connect to a computer via usb (using an ExtUSB or miniUSB cable), and communicate with a headset. In addition to these functions, the port also functions as a (cmos?) level serial port which in stock setups serves as a debug port.
+
+This last feature can be used as a standard (cmos?) level (*NOT RS232 LEVEL!*) serial port to connect to anything from a server in a beowulf cluster to an arduino, but first the headset detection and debug console code in the kernel must be disable. This requires a new kernel to be compiled, or at the very least installed on the phone which the following explain how to do.
+
+Once you have completed these instructions you can use the android-serialport-api offered in the download section to control the serial port from within android applications!
+
+= Prerequisites =
+ * Root your phone. [http://www.cyanogenmod.com/ Cyanogen's mod] is one of the more popular, open, and maintained projects so we will build a serial enabled kernel for this setup.
+ * Install the Engineering or other SPI that enables you to fastboot. Search the [http://forum.xda-developers.com/forumdisplay.php?f=448 XDA dev forums] for this. 
+ * Download and install the [http://developer.android.com/index.html Android SDK].
+ * Identify the kernel version you use (Settings->About Phone->Kernel version)
+ * Build a G1 serial cable. [http://www.instructables.com/id/Android_G1_Serial_Cable/ This instructable] explains how to make a G1 serial to USB cable. If you need another setup such as G1 CMOS serial to 3.3v ttl, 5v serial, or standard rs232, add a comment and we can throw up a page on how to accomplish that. 
+
+ * *If you just want to install a serial-enabled kernel*
+  * Grab a serial enabled kernel from the download section that matches your kernel version. If one is not available, you will need to compile it yourself, buy someone a beer, or ask nicely.
+
+ * *If you want or need to build your own kernel*
+  * Download the getramdisk.py script from the downloads section.
+   * Download and install the [http://developer.android.com/index.html Android NDK]. This is not the same as the SDK.
+  * Install git.
+
+= Backup your phone = 
+You should have installed a utility called nandroid when you installed Cyanogen's mod. This utility backs up all of the entries on your phone so if something should go wrong, you can restore your phone just as it was. Go ahead and  search the [http://forum.xda-developers.com/forumdisplay.php?f=448 XDA dev forums] if you don't know how to do this already and save the backup on your computer.
+
+
+
+*_If you do not plan to build your own kernel, skip to [Htc#Testing_the_kernel Testing the kernel]_*
+
+
+
+
+= Extract the ramdisk out of the boot.img =
+Search through the nandroid backup folder you copied onto your computer and find the `boot.img` file. Afterwards, run it through the `getramdisk.py` script:
+{{{
+$ getramdisk.py boot.img
+}}}
+
+Save the `ramdisk.img` file that is generated for later.
+
+= Pull your current config file off your phone =
+It is necessary to grab your phone's current kernel configuration so that the new serial enabled kernel can be built the same way and support the same features that the old one did.
+
+{{{
+$ adb pull /proc/config.gz
+$ gunzip config.gz
+}}}
+
+Save the `config` file that is uncompressed for later.
+
+= Dream and Magic: Grab Cyanogen's Kernel =
+{{{
+$ git clone git://github.com/CyanogenMod/cm-kernel.git
+$ cd cm-kernel
+$ git branch -r
+}}}
+
+For that last command, take a look at what branches are available:
+{{{
+  origin/HEAD
+  origin/android-2.6.29-bfs
+  origin/master
+}}}
+
+and use the one that matches your kernel version. For example, with `CyanogenMod-4.1.999`, my kernel is `2.6.29.6-cm`, so I'm going to use the `android-2.6.29-bfs` entry. Currently that is the only entry available, but in the future, this may not be the case. Once you identify the branch you want to use, check it out:
+{{{
+$ git checkout --track -b cm-2.6.29-bfs origin/android-2.6.29-bfs
+}}}
+
+= Hero: Download kernel from [http://developer.htc.com/ HTC Developer Center] =
+{{{
+$ wget http://dl4.htc.com/RomCode/Source_and_Binaries/hero-2.6.29-5f74b252.tar.gz
+$ tar -xzf hero-2.6.29-5f74b252.tar.gz
+}}}
+
+= Add the Arm cross-compiler to your path =
+
+First, find out where you installed the NDK. Next go to the `build/prebuilt/` folder and identify the toolchain you should use for your OS. Next run the following:
+{{{
+$ export PATH=$PATH:<path to NDK folder>/toolchains/arm-linux-androideabi-4.4.3/prebuilt/<your os specific choice>/bin
+$ echo $PATH
+}}}
+
+If you don't see the directory appended to your PATH arguments, you may need to use another command to set environmental variables on your machine.
+
+= Configure the kernel =
+Type the following command from your kernel root directory in order to create a default configuration file:
+{{{
+$ make ARCH=arm CROSS_COMPILE=arm-linux-androideabi- hero_defconfig
+}}}
+Next, open the `.config` file with your favorite text editor and replace the following lines:
+
+Replace these lines:
+{{{
+CONFIG_MSM_DEBUG_UART=3
+# CONFIG_MSM_DEBUG_UART_NONE is not set
+# CONFIG_MSM_DEBUG_UART1 is not set
+# CONFIG_MSM_DEBUG_UART2 is not set
+CONFIG_MSM_DEBUG_UART3=y
+}}}
+by:
+{{{
+CONFIG_MSM_DEBUG_UART_NONE=y
+# CONFIG_MSM_DEBUG_UART1 is not set
+# CONFIG_MSM_DEBUG_UART2 is not set
+# CONFIG_MSM_DEBUG_UART3 is not set
+}}}
+
+Replace these lines:
+{{{
+CONFIG_MSM_SERIAL_DEBUGGER=y
+CONFIG_MSM_SERIAL_DEBUGGER_NO_SLEEP=y
+# CONFIG_MSM_SERIAL_DEBUGGER_WAKEUP_IRQ_ALWAYS_ON is not set
+# CONFIG_MSM_SERIAL_DEBUGGER_CONSOLE is not set
+}}}
+by:
+{{{
+# CONFIG_MSM_SERIAL_DEBUGGER is not set
+}}}
+
+Replace this line:
+{{{
+CONFIG_HTC_HEADSET_V1=y
+}}}
+by:
+{{{
+# CONFIG_HTC_HEADSET_V1 is not set
+}}}
+
+Save your modifications, you are now ready for a fresh kernel compilation.
+
+= Compiling the kernel =
+
+Compiling takes a while so go grab a hot snack. When you run the following, it may ask you to configure additional kernel build configuration settings if any new features were added since your kernel was last compiled too. If in doubt with these steps, hit enter to accept the default value.
+{{{
+make ARCH=arm CROSS_COMPILE=arm-linux-androideabi-
+}}}
+
+Cross your fingers it compiles ok!
+
+= Testing the kernel =
+Before you make your new kernel the default kernel used to boot the phone with, you should test it out by temporarily booting the phone with it via fastboot. To do this, first attach your computer to your phone and power it off. Next, hold down the camera button and then the power button until you see a screen with three android robots on skateboards. If you don't see the text "FASTBOOT" on the display, press the return button a few times until you see it.
+
+*If you built the kernel yourself, run the following:*
+Remember that `ramdisk.img` file from earlier? Find out where you stuck it. Next, look in your `cm-kernel` directory under `arch/arm/boot/` and find the `zImage` file.
+
+Once you have located these two files, you can now run the following to temporarily boot the kernel. 
+{{{
+$ fastboot boot <path to zImage>/zImage <path to ramdisk.img>/ramdisk.img 
+}}}
+*OR* if you are just using a boot.img from the downloads page to get serial support, run this:
+{{{
+$ fastboot boot <boot.img file> 
+}}}
+
+It will take a little while, but hopefully it should boot up, if not.. you have some debugging to do! Good thing you didn't install it already, right? 
+
+If the phone does boot up, check to make sure the phone works as expected (i.e. does wireless still work, do applications behave strangely, etc). Assuming everything looks ok, plug your phone into your computer again and run the following:
+{{{
+$ adb shell
+}}}
+
+This lets you browse around your phone's file systems to make sure the serial device was created.
+{{{
+# cd /dev/
+# ls -l
+}}}
+If you see ttyMSM2 in there, congratulations, your serial port works. If it does not appear.. you have more debugging to do.
+
+
+= Install the kernel =
+
+Once you finally get the kernel working to your liking, you can enter the engineering SPL on your phone again, then run one of the following to install it:
+
+If you built your own kernel, run this:
+{{{
+$ fastboot flash:raw boot  <path to zImage>/zImage <path to ramdisk.img>/ramdisk.img 
+$ fastboot reboot
+}}}
+*OR* if you are just using a boot.img from the downloads page to get serial support, run this:
+{{{
+$ fastboot flash:raw boot  <boot.img file>
+$ fastboot reboot
+}}}

@@ -1,0 +1,33 @@
+#summary Building the project
+
+<wiki:toc>
+
+= Introduction =
+This project is composed of native code and java code. This is why you need both the Android NDK and the Android SDK to build the application. This page will briefly explain how to setup a build environment.
+
+= Prerequisites =
+ * If you plan to modify the native code, download and install the [http://developer.android.com/sdk/ndk/index.html Android NDK], otherwise the pre-built native library is committed in SVN.
+ * Download and install the [http://developer.android.com/sdk/index.html Android SDK].
+ * Install [http://developer.android.com/sdk/eclipse-adt.html Eclipse with ADT plugin].
+ * Install a svn client
+
+= Checkout sources =
+Checkout the sources:
+{{{
+$ svn checkout http://android-serialport-api.googlecode.com/svn/trunk/android-serialport-api android-serialport-api
+}}}
+
+= Building serial_port.so (optional) =
+ * All commands must be typed from the project directory {{{android-serialport-api/project}}}.
+ * Build the project
+{{{
+$ ndk-build
+}}}
+
+= Building the apk =
+ * Check that the library (libserial_port.so) has been generated from previous step
+{{{
+$ ls android-serialport-api/project/libs/armeabi
+}}}
+ * Import the project as an Android application inside Eclipse
+ * Build and launch as usual

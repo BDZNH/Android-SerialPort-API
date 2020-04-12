@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/45/trunk/android-serialport-api/project/res/values
+END
+strings.xml
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/45/trunk/android-serialport-api/project/res/values/strings.xml
+END
+baudrates.xml
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/40/trunk/android-serialport-api/project/res/values/baudrates.xml
+END

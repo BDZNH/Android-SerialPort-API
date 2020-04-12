@@ -1,0 +1,59 @@
+#summary Android to RS232 guideline
+#labels Phase-Design
+
+<wiki:toc>
+
+= Introduction =
+
+Here is a page describing the different ways you could use to connect an Android device to an RS232 peripheral.
+
+= Solutions =
+
+https://docs.google.com/drawings/pub?id=1ltkNApgZH9xUvzxF3xODOludDYqXwMsTRtSco9TzKC8&w=1203&h=702&nonsence=file.png
+
+== Solution 1 ==
+ * pros
+  * No need for external API, the Android SDK provides the class [http://developer.android.com/reference/android/bluetooth/BluetoothSocket.html BluetoothSocket]
+  * No need for hardware modifications
+  * hardware flow control is supported
+ * cons
+  * Bluetooth consume battery
+  * high latency
+  * low bandwidth
+ * API
+  * [http://developer.android.com/guide/topics/wireless/bluetooth.html Android SDK]
+
+== Solution 2 ==
+ * pros
+  * USB to RS232 adapters are cheap and easy to find
+  * no hardware modification needed
+  * no external battery needed
+  * low latency
+  * high bandwidth
+ * cons
+  * your Android device needs an USB host connector (most tablets have one, but phones usually don't)
+  * your may need to root your device in order to change /dev/ttyUSB0 file permission, and to load a kernel module.
+ * API
+  * android-serialport-api
+
+== Solution 3 ==
+ * pros
+  * The cheapest solution
+ * cons
+  * hardware adapter must be built (http://www.instructables.com/id/Android-G1-Serial-Cable)
+  * very few Android devices compatibles
+  * hardware flow control is not supported (only RX/TX, no RTS/CTS signals)
+ * API
+  * android-serialport-api
+
+== Solution 4 ==
+ * pros
+  * compatible with any Android device with an USB slave connector, i.e. 99.9% of the Android devices.
+  * no need to root your phone
+  * low latency
+  * high bandwidth
+  * you may use other GPIOs of the microcontroller at the same time
+ * cons
+  * 
+ * API
+  * https://github.com/ytai/ioio/wiki/UART

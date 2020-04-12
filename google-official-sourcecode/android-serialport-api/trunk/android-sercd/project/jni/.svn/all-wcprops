@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/15/trunk/android-sercd/project/jni
+END
+.cproject
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/.cproject
+END
+COPYING
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/COPYING
+END
+unix.h
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/unix.h
+END
+sercd.c
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/sercd.c
+END
+android.c
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/android.c
+END
+sercd-jni.h
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/sercd-jni.h
+END
+unix.c
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/unix.c
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/.project
+END
+Android.mk
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/Android.mk
+END
+android.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/android.h
+END
+sercd.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/15/trunk/android-sercd/project/jni/sercd.h
+END

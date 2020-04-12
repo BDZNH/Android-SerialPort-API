@@ -1,0 +1,8 @@
+#summary Table of content
+
+=Table of content=
+
+ * [Building_the_project Building the project]
+ * [hardware_devices Serial ports on Android devices]
+ * [android_to_rs232_guideline Android to RS232 guideline]
+ * [Htc Activating the serial port on HTC Dream, HTC Magic and HTC Hero]

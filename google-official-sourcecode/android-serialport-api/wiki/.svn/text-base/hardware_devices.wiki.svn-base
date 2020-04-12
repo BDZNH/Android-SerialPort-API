@@ -1,0 +1,37 @@
+#summary Serial ports on Android devices
+
+<wiki:toc>
+
+= Introduction =
+
+Here is a list of Android devices which provide a serial port through their dock connectors. To learn how to enable serial communications, find your phone in the list below and click on the device name.
+Please note that in addition to hardware consideration, you may need a root access to your Android device in order to allow read/write access to the Linux device node (/dev/...), and also rebuilt a Linux kernel to activate the serial port.
+
+= List =
+
+==Tested devices==
+
+ * [Htc HTC Dream]
+  * T-Mobile G1
+  * Era G1 
+ * [Htc HTC Magic]
+  * T-Mobile myTouch 3G
+  * Rogers HTC Magic
+  * Docomo HT-03A
+ * [Htc HTC Hero]
+  * T-Mobile G2 Touch
+ * [Htc HTC/Google Nexus One]
+ * [Htc HTC Tattoo]
+  * HTC Click
+ * LG GW620 / etna / eve / InTouch max
+ * USB to serial adapter plugged on a USB host capable Android device
+  * Archos Gen 101
+  * ZT-180
+  * advent vega
+ * FriendlyArm mini6410
+ * iMx51
+
+==Untested devices==
+
+ * [Htc HTC Desire]
+ * [Htc HTC Passion]
